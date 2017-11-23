@@ -32,7 +32,11 @@ struct {
     char full_content[1000000];
     enum Category category;
     word tag_list[100];
+    float appearance;				// store the proposition of appearance of keywords
 } e_news;
+
+struct e_news *E_news_arr; 			//store struct e_news read from file
+size_t e_news_num;					//store number of e-news
 
 //function
 void gettaglist(char*,char **,int *  );
