@@ -21,11 +21,12 @@
 #define FUNCTIONALITY_H
 
 //
+
 typedef char word[30];
 enum Category {SOCIETY, EDUCATION, SCIENCE, TECHNOLOGY, 
                  FAMILY, HEALTH, JOB, ENTERTAINMENT, OTHERS};
 enum some_value {tag_no = 1000, enews_no =1000};
-typedef struct {
+struct {
     char ID[10];              // ten-digit string
     char pubDate[10];         // partern: dd/mm/yyyy
     char full_content[1000000];
