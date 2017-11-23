@@ -16,6 +16,7 @@
 #include <string.h>
 #include <dirent.h>
 
+#include "CLI.h"
 
 #ifndef FUNCTIONALITY_H
 #define FUNCTIONALITY_H
