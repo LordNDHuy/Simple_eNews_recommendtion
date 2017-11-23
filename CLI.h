@@ -8,6 +8,9 @@
 #ifndef IO_CLI_H_
 #define IO_CLI_H_
 
+
+#include "functionality.h"
+
 extern void header(void);
 
 // file manipulation

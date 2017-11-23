@@ -16,8 +16,6 @@
 #include <string.h>
 #include <dirent.h>
 
-#include "CLI.h"
-
 #ifndef FUNCTIONALITY_H
 #define FUNCTIONALITY_H
 
@@ -27,7 +25,7 @@ typedef char word[30];
 enum Category {SOCIETY, EDUCATION, SCIENCE, TECHNOLOGY, 
                  FAMILY, HEALTH, JOB, ENTERTAINMENT, OTHERS};
 enum some_value {tag_no = 1000, enews_no =1000};
-struct {
+typedef struct _e_news {
     char ID[10];              // ten-digit string
     char pubDate[10];         // partern: dd/mm/yyyy
     char full_content[1000000];
@@ -36,8 +34,9 @@ struct {
     float appearance;				// store the proposition of appearance of keywords
 } e_news;
 
-struct e_news *E_news_arr; 			//store struct e_news read from file
-size_t e_news_num;					//store number of e-news
+//Huynguyen đưa thành extern để k bị lỗi multiple definion
+extern e_news *E_news_arr; 			//store struct e_news read from file
+extern size_t e_news_num;					//store number of e-news
 
 //function
 void gettaglist(char*,char **,int *  );

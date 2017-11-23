@@ -63,8 +63,7 @@ void scan_dir(char * enews[][tag_no],int enews_no[],int * e_num){
 
 // enews and V management
 
-void data_management(){
-      //e_news *enews[1000];
+void data_management(){    
     int e_num;
     char *taglist[tag_no] = {"\0"};
     int  tag_num[tag_no] ;
@@ -83,10 +82,8 @@ void data_management(){
             }
             if(check == false){
                 taglist[V_num] = enews[i][j];
-                printf("%s\n",taglist[V_num]);
                 V_num++;
             }else check = false;
         }
     }
-    printf("%i",V_num);
 }

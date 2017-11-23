@@ -6,7 +6,6 @@
  */
 
 #include "CLI.h"
-#include "functionality.h"
 
 //interface
 void header(){
@@ -20,11 +19,16 @@ void header(){
     printf("*                                         * \n");
     printf("******************************************* \n");
 }
+// Huynguyen
+e_news *E_news_arr; 			//store struct e_news read from file
+size_t e_news_num;					//store number of e-news
+
+
 
 //file manipulation
-size_t e_news_num = 0;
-struct e_news struct_dissolve(char *input){
-	struct e_news temp;
+//Huynguyen đưa thành pointer, phần categỏry có sửa.
+e_news *struct_dissolve(char *input){
+	e_news *temp;
 								//hold position for line scanning
 	short space = 0;
 
@@ -36,23 +40,25 @@ struct e_news struct_dissolve(char *input){
 
 	for (size_t position = 0; input[position] != '\0'; position++){
 		if (input[position] == ' ') {space++; continue;}
-
+	
 		switch (space){
 		case 0: {									//ID scanning
-			temp.ID[ID_position] = input[position];
+			temp->ID[ID_position] = input[position];
 			ID_position++; break;}
 		case 1: {									// category scanning
-			temp.category = input[position] - '0';
+			int type =  input[position] - '0';
+			enum Category temp_cag = (enum Category)(type-'0');
+			temp->category = temp_cag;
 			break;}
 		case 2:{									// day, month, year scanning
-			temp.pubDate[date_position] = input[position];
+			temp->pubDate[date_position] = input[position];
 			date_position++; break;}
 		case 3:{									// full content scanning
-			temp.full_content[fullcontent_position] = input[position];
+			temp->full_content[fullcontent_position] = input[position];
 			fullcontent_position++; break;}
 		case 4:{									//taglist scanning
 			if (input[position] == ';') {taglistWord_position = 0; taglist++; continue;}
-			temp.tag_list[taglist][taglistWord_position] = input[position];
+			temp->tag_list[taglist][taglistWord_position] = input[position];
 			taglistWord_position++; break;}
 		}
 	}
@@ -74,11 +80,11 @@ void FileReader_E_news(){
 	while (getline(&line, &len, file) != EOF) {
 		if (e_news_num == 0) {
 			e_news_num = atoi(line);
-			E_news_arr = (struct e_news*) malloc (sizeof(struct e_news)*e_news_num);
+			E_news_arr = (e_news*) malloc (sizeof(e_news)*e_news_num);
 			continue;
 		}
 
-		E_news_arr[position] = struct_dissolve(line);
+		E_news_arr[position] = *struct_dissolve(line);
 		position++;
 	}
 
