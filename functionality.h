@@ -46,5 +46,16 @@ void scan_dir(char*** ,int*,int *);
 //(taglist(V),no of taglist(|V|), list of enews, no of enews)
 
 void data_management();
+//check similarity
+typedef struct _check_similarity_var{
+    char *taglist[tag_no];
+    char *enews1[enews_no];
+    char *enews2[enews_no];
+    int enews1_no;
+    int enews2_no;
+    int taglist_no;
+
+}check_similarity_var;
+double check_similarity(check_similarity_var * );
 #endif /* FUNCTIONALITY_H */
 ;
