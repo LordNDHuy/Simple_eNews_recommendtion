@@ -6,7 +6,7 @@
  */
 
 #include "CLI.h"
-#include "../funcs.h"
+#include "functionality.h"
 
 //interface
 void header(){
