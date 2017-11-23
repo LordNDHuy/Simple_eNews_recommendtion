@@ -24,7 +24,8 @@
 typedef char word[30];
 enum Category {SOCIETY, EDUCATION, SCIENCE, TECHNOLOGY, 
                  FAMILY, HEALTH, JOB, ENTERTAINMENT, OTHERS};
-typedef struct e_news{
+enum some_value {tag_no = 1000, enews_no =1000};
+typedef struct {
     char ID[10];              // ten-digit string
     char pubDate[10];         // partern: dd/mm/yyyy
     char full_content[1000000];
@@ -33,7 +34,12 @@ typedef struct e_news{
 } e_news;
 
 //function
-void gettaglist(char *taglist[1000],int *length, char* );
-void scan_dir();
+void gettaglist(char*,char **,int *  );
+//(taglist(V),no of taglist(|V|),name of enewsfile, enews, no of tag list of enews)
+
+void scan_dir(char*** ,int*,int *);
+//(taglist(V),no of taglist(|V|), list of enews, no of enews)
+
+void data_management();
 #endif /* FUNCTIONALITY_H */
 ;

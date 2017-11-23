@@ -3,7 +3,6 @@
 int main(int argc, char ** argv){
     char *list[1000];
     int length = 0 ;
-
-    scan_dir();
+    data_management();
     return 0;
 }
