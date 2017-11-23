@@ -14,10 +14,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
+
 
 #ifndef FUNCTIONALITY_H
 #define FUNCTIONALITY_H
 
+//
 typedef char word[30];
 enum Category {SOCIETY, EDUCATION, SCIENCE, TECHNOLOGY, 
                  FAMILY, HEALTH, JOB, ENTERTAINMENT, OTHERS};
@@ -30,6 +33,7 @@ typedef struct e_news{
 } e_news;
 
 //function
-void gettaglist(char *taglist[1000],int *length);
+void gettaglist(char *taglist[1000],int *length, char* );
+void scan_dir();
 #endif /* FUNCTIONALITY_H */
 ;

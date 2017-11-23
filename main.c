@@ -1,13 +1,9 @@
 #include "functionality.h"
 
-int main(){
+int main(int argc, char ** argv){
     char *list[1000];
     int length = 0 ;
-    gettaglist(list,&length);
-    printf("%i",length);
-    for(int i =0;i <length; i++){
-        printf("%s ",list[i]);
-    }
 
+    scan_dir();
     return 0;
 }
