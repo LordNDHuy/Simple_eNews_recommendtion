@@ -55,6 +55,7 @@ void scan_dir(char * enews[][tag_no],int enews_no[],int * e_num){
             //printf("%i", enews_no[*e_num]);
             *e_num += 1;
         }
+        if(compare_string(dir[dir_le] ,"..") == true) break;
         dir_le++;      
     }
     
@@ -82,6 +83,7 @@ void data_management(){
             }
             if(check == false){
                 taglist[V_num] = enews[i][j];
+                printf("%s", taglist[V_num]);
                 V_num++;
             }else check = false;
         }
