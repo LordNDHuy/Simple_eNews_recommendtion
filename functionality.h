@@ -19,7 +19,7 @@
 #ifndef FUNCTIONALITY_H
 #define FUNCTIONALITY_H
 
-//
+//// define section
 
 #define true     1
 #define false    0
@@ -33,24 +33,36 @@ typedef struct _e_news {
     char pubDate[10];         // partern: dd/mm/yyyy
     char full_content[1000000];
     enum Category category;
-    word tag_list[100];
+    word *tag_list[100];
+    int no;
     float appearance;				// store the proposition of appearance of keywords
 } e_news;
 
-//Huynguyen đưa thành extern để k bị lỗi multiple definion
+typedef struct _taglist{
+    word list[100];
+    int no;
+} taglist;
+
+
+
+////end define section
+
+
 extern e_news *E_news_arr; 			//store struct e_news read from file
 extern size_t e_news_num;					//store number of e-news
 
-//function
-void gettaglist(char*,char **,int *  );
-//(taglist(V),no of taglist(|V|),name of enewsfile, enews, no of tag list of enews)
+////function section
+e_news * get_news(char *);
 
-void scan_dir(char*[][tag_no] ,int[],int *);
-//(taglist(V),no of taglist(|V|), list of enews, no of enews)
+int scan_dir(e_news *);
 
 void data_management();
 //check similarity
 
 double check_similarity();
+
+////end function section
+
+
 #endif /* FUNCTIONALITY_H */
 ;

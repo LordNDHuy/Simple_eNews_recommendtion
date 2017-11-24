@@ -58,7 +58,7 @@ e_news *struct_dissolve(char *input){
 			fullcontent_position++; break;}
 		case 4:{									//taglist scanning
 			if (input[position] == ';') {taglistWord_position = 0; taglist++; continue;}
-			temp->tag_list[taglist][taglistWord_position] = input[position];
+			//dong can sua o day// temp->tag_list[taglist][taglistWord_position] = input[position];
 			taglistWord_position++; break;}
 		}
 	}
