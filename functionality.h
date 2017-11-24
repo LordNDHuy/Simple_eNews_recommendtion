@@ -21,7 +21,10 @@
 
 //
 
+#define true     1
+#define false    0
 typedef char word[30];
+
 enum Category {SOCIETY, EDUCATION, SCIENCE, TECHNOLOGY, 
                  FAMILY, HEALTH, JOB, ENTERTAINMENT, OTHERS};
 enum some_value {tag_no = 1000, enews_no =1000};
@@ -42,7 +45,7 @@ extern size_t e_news_num;					//store number of e-news
 void gettaglist(char*,char **,int *  );
 //(taglist(V),no of taglist(|V|),name of enewsfile, enews, no of tag list of enews)
 
-void scan_dir(char*** ,int*,int *);
+void scan_dir(char*[][tag_no] ,int[],int *);
 //(taglist(V),no of taglist(|V|), list of enews, no of enews)
 
 void data_management();

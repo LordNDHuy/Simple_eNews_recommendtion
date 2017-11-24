@@ -1,5 +1,5 @@
 Objs = main.o functionality.o CLI.o
-CC   = g++
+CC   = gcc
 Cflag =  -Wall -std=c++11 -g -c
 
 Lflag =  -Wall -std=c++11 -g
