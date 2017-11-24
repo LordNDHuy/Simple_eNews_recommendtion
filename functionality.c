@@ -11,9 +11,8 @@ int compare_string(char a[], char b[]){
     else return false;
 }
 
-e_news  * get_news(char *f){
-    e_news *news = malloc(sizeof(e_news));
-    news->no = 0;
+e_news * get_news(char *f){
+   
     FILE *file;
     char * line = NULL;
     size_t len = 0;
@@ -27,23 +26,23 @@ e_news  * get_news(char *f){
     if(file == NULL) exit(-1);
     char *temp;
     word *temp_word;
-        while ((read = getline(&temp_word, &len, file)) != -1){
-        //getrid of \n 
-        char temp_c = temp_word[strlen(temp_word) -1 ];
-            if((compare_string(&temp_c,"\nx") ==true )||(compare_string(&temp_c,"\n") == true)){
-                *temp_word[strlen(temp_word)-1] = 0;  
-            } 
-        //*temp_word = temp;
-        news->tag_list[news->no] = temp_word;
-        news->no +=1;
-        printf("%s",news->tag_list[news->no]);
+    e_news *news = malloc(sizeof(e_news));
+    news->no = 0;
+    while ((read = getline(&news->tag_list[news->no], &len, file)) != -1){
+        int len = strlen(news->tag_list[news->no]);
+        char temp[30];
+        strncpy(temp,news->tag_list[news->no],len);
+        if (temp[len-1]==10) temp[len-1] = 0;
+        else temp[len] =0;
+        strncpy(news->tag_list[news->no],temp,len);
+        news->no +=1;        
     }
     fclose(file);
-    free(line);
     return news;
 }
 
-int scan_dir(e_news *list){
+int scan_dir(e_news **elist){
+    
     //struct dirent * entry;
     DIR *d = opendir( "./enews" );
 
@@ -52,16 +51,20 @@ int scan_dir(e_news *list){
         return;
     }
     char *dir[1000];
+    int length =0;
     int dir_le= 0;
     while ((dir[dir_le] = readdir(d)->d_name) != 0) {
         //printf("%s\n", entry->d_name);
         //dir[dir_le] = entry->d_name;  
+        e_news *temp = malloc(sizeof(e_news));
         if (!(compare_string(dir[dir_le] , ".") == true || compare_string(dir[dir_le] ,"..") == true)){            
             //printf("%s",dir[dir_le]);  
-            int length= 0;
-            list->tag_list[dir_le] = get_news(dir[dir_le]);
+            elist[length] = get_news(dir[dir_le]);
+            length++;
+            printf("%s",dir[dir_le]);
             //printf("%i", enews_no[*e_num]);
         }
+
         if(compare_string(dir[dir_le] ,"..") == true) break;
         dir_le++;      
     }
@@ -77,12 +80,19 @@ void data_management(){
     char *taglist[tag_no] = {"\0"};
     int  tag_num[tag_no] ;
     char * enews[enews_no][tag_no];*/
-    taglist *list = malloc(100*sizeof(taglist));
-    e_news *enews_list= malloc(100*sizeof(e_news));
-    printf("%i",enews_list[0].no);
+    taglist *list =malloc(100*sizeof(taglist));
+    e_news **enews_list =malloc(100*sizeof(e_news));
+    //init 
+    for(int i = 0;i<100;i++){
+        enews_list[i] = malloc(sizeof(e_news));
+    }
+
     size_t enews_no = scan_dir(enews_list);
     int check = false; 
-/*
+    for(int i =0;i<enews_list[0]->no;i++){
+        printf("%s \n",enews_list[0]->tag_list[i]);
+    }
+        /*
     for(int i = 0;i < enews_no;i++){
         for(int j =0; j<enews_list[i];i++){
             *list->list[list->no] = "\0";

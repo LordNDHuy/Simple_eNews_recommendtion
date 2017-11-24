@@ -54,7 +54,7 @@ extern size_t e_news_num;					//store number of e-news
 ////function section
 e_news * get_news(char *);
 
-int scan_dir(e_news *);
+int scan_dir(e_news **);
 
 void data_management();
 //check similarity
