@@ -35,7 +35,7 @@ void gettaglist(char *f,char * enews[tag_no],int * length){
 }
 
 void scan_dir(char * enews[][tag_no],int enews_no[],int * e_num){
-    struct dirent * entry;
+    //struct dirent * entry;
     DIR *d = opendir( "./enews" );
 
     if (d == 0) {
@@ -44,9 +44,9 @@ void scan_dir(char * enews[][tag_no],int enews_no[],int * e_num){
     }
     char *dir[1000];
     int dir_le= 0;
-    while ((entry = readdir(d)) != 0) {
+    while ((dir[dir_le] = readdir(d)->d_name) != 0) {
         //printf("%s\n", entry->d_name);
-        dir[dir_le] = entry->d_name;  
+        //dir[dir_le] = entry->d_name;  
         if (!(compare_string(dir[dir_le] , ".") == true || compare_string(dir[dir_le] ,"..") == true)){            
             //printf("%s",dir[dir_le]);  
             int length= 0;
