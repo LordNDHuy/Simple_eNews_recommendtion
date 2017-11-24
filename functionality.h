@@ -50,15 +50,7 @@ void scan_dir(char*[][tag_no] ,int[],int *);
 
 void data_management();
 //check similarity
-typedef struct _check_similarity_var{
-    char *taglist[tag_no];
-    char *enews1[enews_no];
-    char *enews2[enews_no];
-    int enews1_no;
-    int enews2_no;
-    int taglist_no;
 
-}check_similarity_var;
-double check_similarity(check_similarity_var * );
+double check_similarity();
 #endif /* FUNCTIONALITY_H */
 ;

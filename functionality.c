@@ -32,6 +32,7 @@ void gettaglist(char *f,char * enews[tag_no],int * length){
         *length += 1;
     }
     fclose(file);
+    free(line);
 }
 
 void scan_dir(char * enews[][tag_no],int enews_no[],int * e_num){
@@ -64,7 +65,7 @@ void scan_dir(char * enews[][tag_no],int enews_no[],int * e_num){
 
 // enews and V management
 
-void data_management(){    
+int data_management(){    
     int e_num;
     char *taglist[tag_no] = {"\0"};
     int  tag_num[tag_no] ;
@@ -83,37 +84,15 @@ void data_management(){
             }
             if(check == false){
                 taglist[V_num] = enews[i][j];
-                printf("%s", taglist[V_num]);
+                printf("%s \n", taglist[V_num]);
                 V_num++;
             }else check = false;
         }
-    }
-    //~~~~
-    /*check_similarity_var * check_sim;
-    check_sim->enews1[0]= "\0";
-    for(int i = 0; i < V_num;i++){
-        check_sim->taglist[i]=taglist[i];
-    }
-    for(int i =0;i < tag_num[0];i++){
-        check_sim->enews1[i]=enews[0][i];
-    }
-    check_sim->enews1_no = tag_num[0];
-    for(int i = 0; tag_num[1];i++){
-        check_sim->enews2[i]=enews[1][i];
-    }
-    check_sim->enews2_no = tag_num[1];
-    //~~
-    check_similarity(check_sim);*/
+    }g
 }
 
 //check similarity
 
-double check_similarity(check_similarity_var * temp){
-    int check1[temp->taglist_no], check2[temp->taglist_no];
-    memcpy(check1,0,temp->taglist_no);
-    for(int i = 0; i < temp->taglist_no;i++){
-        for(int j =0 ; j<temp->enews1_no;j++){
-            
-        }
-    }
+double check_similarity(){
+    
 }
