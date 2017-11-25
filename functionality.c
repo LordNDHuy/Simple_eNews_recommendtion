@@ -29,11 +29,20 @@ e_news * get_news(char *f){
     e_news *news = malloc(sizeof(e_news));
     news->no = 0;
     while ((read = getline(&news->tag_list[news->no], &len, file)) != -1){
+        //  cái khúc này này, tại vì á lúc mà lấy vào thì nó bị dính cái \n mà tao 
+        // bị dính cái pointer trong pointer (tức là cái word trong đó là pointer trong cái pointer enews)
+        // thành ra tao mới làm dài dòng vậy từng bức này
+
+        // lấy độ dài chuỗi mới lấy
         int len = strlen(news->tag_list[news->no]);
         char temp[30];
+        //sao chép hoàn toàn dữ liệu từ chuỗ i mới lấy sang mảng char temp[30]
         strncpy(temp,news->tag_list[news->no],len);
+        //cái temp[len-1] == 10 là tại vị trí cuối cùng tức là \n ah 
+        //nếu nó bằng 10 (10 trong ascii là \n) thì thay \n băng 0
         if (temp[len-1]==10) temp[len-1] = 0;
         else temp[len] =0;
+        //sau đó copy ngược lại . done.
         strncpy(news->tag_list[news->no],temp,len);
         news->no +=1;        
     }
