@@ -161,7 +161,7 @@ void recommendation(){
     e_news *enews_list =malloc(100*sizeof(e_news));
     taglist *list =malloc(100*sizeof(taglist));
     int enews_no = data_management(enews_list,list);
-    int e0 =4;
+    int e0 =6;
     for(int i = 0;i< enews_no;i++){
         if(i != e0){
             float sim = check_similarity(enews_list,list,enews_no,e0,i);
