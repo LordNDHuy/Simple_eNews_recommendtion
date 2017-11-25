@@ -89,13 +89,15 @@ void data_management(){
 
     size_t enews_no = scan_dir(enews_list);
     int check = false; 
-    for(int i =0;i<enews_list[0]->no;i++){
-        printf("%s \n",enews_list[0]->tag_list[i]);
+    for(int j=0;j<enews_no;j++){
+        for(int i =0;i<enews_list[j]->no;i++){
+            //printf("%s \n",enews_list[j]->tag_list[i]);
     }
-        /*
+    }
+    
     for(int i = 0;i < enews_no;i++){
-        for(int j =0; j<enews_list[i];i++){
-            *list->list[list->no] = "\0";
+        for(int j =0; j < enews_list[i]->no;j++){
+            list->list[list->no] = "\0";
             for(int k = 0; k < list->no;k++){
                 if(compare_string(enews_list[i]->tag_list[j],list->list[k]) == true ) {
                     check = true;
@@ -103,12 +105,13 @@ void data_management(){
                 }
             }
             if(check == false){
-                *list->list[list->no] = enews_list[i]->tag_list[j];
-                printf("%d \n", *list->list[list->no]);
+                list->list[list->no] = enews_list[i]->tag_list[j];
+                printf("%s \n", list->list[list->no]);
                 list->no++;
             }else check = false;
         }
-    }*/
+    }
+    printf("%i",list->no);
 }
 
 //check similarity

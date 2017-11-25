@@ -39,7 +39,7 @@ typedef struct _e_news {
 } e_news;
 
 typedef struct _taglist{
-    word list[100];
+    word *list[100];
     int no;
 } taglist;
 
