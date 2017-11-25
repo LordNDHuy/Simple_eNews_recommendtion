@@ -1,8 +1,8 @@
 Objs = main.o functionality.o CLI.o
 CC   = gcc
-Cflag =  -Wall -std=c++11 -g -c
+Cflag =  -Wall -std=c++11 -g -c -lm
 
-Lflag =  -Wall -std=c++11 -g
+Lflag =  -Wall -std=c++11 -g -lm
 
 .PHONY: clean
 
