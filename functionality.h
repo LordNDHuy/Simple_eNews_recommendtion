@@ -53,14 +53,16 @@ extern e_news *E_news_arr; 			//store struct e_news read from file
 extern size_t e_news_num;					//store number of e-news
 
 ////function section
-e_news * get_news(char *);
+e_news get_news(char *);
 
-int scan_dir(e_news **);
+int scan_dir(e_news *);
 
-void data_management();
+int data_management(e_news*,taglist*);
 //check similarity
 
-float check_similarity(e_news **, taglist *,size_t);
+float check_similarity(e_news *, taglist *,size_t,int ,int);
+
+void recommendation();
 
 ////end function section
 
