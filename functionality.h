@@ -60,7 +60,7 @@ int scan_dir(e_news **);
 void data_management();
 //check similarity
 
-double check_similarity(e_news **, taglist *,size_t);
+float check_similarity(e_news **, taglist *,size_t);
 
 ////end function section
 

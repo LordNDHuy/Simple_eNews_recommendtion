@@ -141,7 +141,7 @@ float cal_similarity(int*a,int*b,int dim){
     return sum/(len_a*len_b);
 }
 
-double check_similarity(e_news **enews_list,taglist *list,size_t enews_no){
+float check_similarity(e_news **enews_list,taglist *list,size_t enews_no){
     int *check0,*check1;
     check0 = malloc(list->no*sizeof(int));
     check1 = malloc(list->no*sizeof(int));
