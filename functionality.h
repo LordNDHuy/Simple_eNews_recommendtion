@@ -61,7 +61,7 @@ int scan_dir(e_news *);
 int data_management(e_news*,taglist*);
 //check similarity
 
-float check_similarity(e_news *, taglist *,size_t,int ,int);
+float *check_similarity(e_news *, taglist *,size_t,int);
 
 void recommendation();
 

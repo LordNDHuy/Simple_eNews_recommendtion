@@ -85,7 +85,7 @@ int data_management(e_news* enews_list,taglist*list){
     memcpy(enews_list[4].full_content,e,strlen(e)-1);
     char f[10000] = "Disturbances to the limbic cortex are registered in a different manner. Pups with limbic damage can move around and feed themselves well enough but do not register the presence of their littermates. Scientists have observed how, after a limbic lobotomy2, “one impaired monkey stepped on his outraged peers as if treading on a log or a rock”. In our own species, limbic damage is closely related to sociopathic behaviour. Sociopaths in possession of fully-functioning neocortexes are often shrewd and emotionally intelligent people but lack any ability to relate to, empathise with or express concern for others. ";
     memcpy(enews_list[5].full_content,f,strlen(f)-1);
-    char g[1000] = "One of the neurological wonders of history occurred when a railway worker named Phineas Gage survived an incident during which a metal rod skewered his skull, taking a considerable amount of his neocortex with it. Though Gage continued to live and work as before, his fellow employees observed a shift in the equilibrium of his personality. Gage’s animal propensities were now sharply pronounced while his intellectual abilities suffered; garrulous or obscene jokes replaced his once quick wit. New findings suggest, however, that Gage managed to soften these abrupt changes over time and rediscover an appropriate social manner. This would indicate that reparative therapy has the potential to help patients with advanced brain trauma to gain an improved quality of life. ";
+    char g[10000] = "One of the neurological wonders of history occurred when a railway worker named Phineas Gage survived an incident during which a metal rod skewered his skull, taking a considerable amount of his neocortex with it. Though Gage continued to live and work as before, his fellow employees observed a shift in the equilibrium of his personality. Gage’s animal propensities were now sharply pronounced while his intellectual abilities suffered; garrulous or obscene jokes replaced his once quick wit. New findings suggest, however, that Gage managed to soften these abrupt changes over time and rediscover an appropriate social manner. This would indicate that reparative therapy has the potential to help patients with advanced brain trauma to gain an improved quality of life. ";
     memcpy(enews_list[6].full_content,g,strlen(g)-1);
 
     //end simulation.
@@ -132,13 +132,15 @@ float cal_similarity(int*a,int*b,int dim){
     return sum/(len_a*len_b);
 }
 
-float check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0,int e1){
+float *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0){
     int *check0,*check1;
+    float *sim = malloc(enews_no*sizeof(float));
     check0 = malloc(list->no*sizeof(int));
     check1 = malloc(list->no*sizeof(int));
+
     memset(check0,false,list->no*sizeof(int));
-    memset(check1,false,list->no*sizeof(int));
     // check matching of enews 0
+
     for(int k = 0;k<list->no;k++){
         for(int i = 0;i<enews_list[e0].no;i++){
             if(compare_string(list->list[k],enews_list[e0].tag_list[i])){
@@ -147,29 +149,36 @@ float check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0,i
             }
         }
     }
-    //check matching of enews 1
-    for(int k = 0;k<list->no;k++){
-        for(int i = 0;i<enews_list[e1].no;i++){
-            if(compare_string(list->list[k],enews_list[e1].tag_list[i])){
-                check1[k]=1;
-                //printf("%s        ",enews_list[0]->tag_list[i]);
-            }
-        }
-    }
 
-    ///
-    float sim = cal_similarity(check0,check1,list->no);
-    //printf("%.4f\n",sim);
-    for(int i=0;i<list->no;i++){
+
+        //check matching of (enews_no -1) E_news.
+    for(int j = 0;j< enews_no;j++){
+        if(j != e0){
+            memset(check1,false,list->no*sizeof(int));
+            //check matching of enews i
+            for(int k = 0;k<list->no;k++){
+                for(int i = 0;i<enews_list[j].no;i++){
+                    if(compare_string(list->list[k],enews_list[j].tag_list[i])){
+                        check1[k]=1;
+                        //printf("%s        ",enews_list[0]->tag_list[i]);
+                    }
+                }
+            }
+            ///
+            sim[j] = cal_similarity(check0,check1,list->no);
+            //printf("%.4f\n",sim);
+        }
+    }   
+    for(int i=0;i<enews_no;i++){
+            i!=e0?printf("enews %i to %i  %0.5f\n",i,e0,sim[i]):printf("");            
         //printf("%-30s:  %-5i:%i\n",list->list[i],check0[i],check1[i]);
     }
-
-
     return sim;
-}
+}   
 
-//search content
-int search(e_news *news){
+//se    arch content
+int *search_content(e_news *news,size_t enews_no){
+    int * search_re = malloc(enews_no*sizeof(int));
     char *sstr;
     size_t len =0;
     printf("input search string :");
@@ -179,24 +188,27 @@ int search(e_news *news){
     regmatch_t matches[30];
     int status = regcomp(&reg,sstr,REG_ICASE);
     if(status) exit(-1);
-    char *a = news->full_content;
-    status = regexec(&reg,news->full_content,30,matches,0);
-    if(status ==0){
-        printf("content contains  %s",sstr);
-    }else printf("content not contains %s",sstr);
-    return 0;
+    //char *a = news->full_content;
+    for(int i = 0;i<enews_no;i++){
+        status = regexec(&reg,news[i].full_content,30,matches,0);
+        if(status == 0 ){
+            search_re[i]=true ;
+        }else{
+            search_re[i]=false ;
+        }
+    }       
+    return search_re;
 }
+
 
 void recommendation(){
     e_news *enews_list =malloc(100*sizeof(e_news));
     taglist *list =malloc(100*sizeof(taglist));
     int enews_no = data_management(enews_list,list);
-    int e0 =6;
-    for(int i = 0;i< enews_no;i++){
-        if(i != e0){
-            float sim = check_similarity(enews_list,list,enews_no,e0,i);
-            printf("%i to %i  %0.4f\n",i,e0,sim);
-        }
-    }
-    search(&enews_list[0]);
+    int e0 =0;
+    float * sim = check_similarity(enews_list,list,enews_no,e0);
+
+
+    //content search return a list with enews_no elements whose values are true or false
+    int * search_re = search_content(enews_list,enews_no);
 }
