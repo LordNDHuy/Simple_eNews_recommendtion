@@ -169,8 +169,20 @@ float *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0)
             //printf("%.4f\n",sim);
         }
     }   
+    int i =1;
+    while(i<enews_no){
+        int j =i;
+        while(j>0 & sim[j-1]>sim[j]){
+            float temp=sim[j];
+            sim[j] = sim[j-1];
+            sim[j-1] = sim[j];
+            j--;
+        }
+        i++;
+    }
     for(int i=0;i<enews_no;i++){
-            i!=e0?printf("enews %i to %i  %0.5f\n",i,e0,sim[i]):printf("");            
+        if(i !=e0)
+        printf("enews %i to %i  %0.5f\n",i,e0,sim[i]);            
         //printf("%-30s:  %-5i:%i\n",list->list[i],check0[i],check1[i]);
     }
     return sim;
@@ -200,15 +212,33 @@ int *search_content(e_news *news,size_t enews_no){
     return search_re;
 }
 
+int *search_tag(e_news *news,size_t enews_no){
+    int * search_re = malloc(enews_no*sizeof(int));
+    char *sstr;
+    size_t len =0;
+    printf("input search string :");
+    getline(&sstr,&len,stdin);
+    sstr[strlen(sstr)-1] = 0;
+    const char del[2] = " ";
+    char * token[100];
+    int i=0;
+    token[i] = strtok(sstr,del);
+    while(token[i] != NULL){
+        printf("%s\n",token[i]);
+        i++;
+        token[i] = strtok(NULL,del);
+    }
+    return search_re;
+}
 
 void recommendation(){
     e_news *enews_list =malloc(100*sizeof(e_news));
     taglist *list =malloc(100*sizeof(taglist));
     int enews_no = data_management(enews_list,list);
-    int e0 =0;
+    //search for enews'tag similarity
+    int e0 = 0;//e0 is the current enews 
     float * sim = check_similarity(enews_list,list,enews_no,e0);
-
-
     //content search return a list with enews_no elements whose values are true or false
-    int * search_re = search_content(enews_list,enews_no);
+    //int * search_re = search_content(enews_list,enews_no);
+    search_tag(enews_list,enews_no);
 }
