@@ -1,0 +1,1 @@
+/usr/bin/gcc   -rdynamic CMakeFiles/string_sre.dir/main.c.o  -o string_sre 

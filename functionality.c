@@ -188,46 +188,64 @@ float *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0)
     return sim;
 }   
 
-//se    arch content
-int *search_content(e_news *news,size_t enews_no){
-    int * search_re = malloc(enews_no*sizeof(int));
+//search content
+enum search_choice {SEARCH_CONTENT =0, SEARCH_TAG };
+taglist * str_sep(int search_choice){
     char *sstr;
     size_t len =0;
     printf("input search string :");
     getline(&sstr,&len,stdin);
-    sstr[strlen(sstr)-1] =0;
-    regex_t reg;
-    regmatch_t matches[30];
-    int status = regcomp(&reg,sstr,REG_ICASE);
-    if(status) exit(-1);
-    //char *a = news->full_content;
-    for(int i = 0;i<enews_no;i++){
-        status = regexec(&reg,news[i].full_content,30,matches,0);
-        if(status == 0 ){
-            search_re[i]=true ;
-        }else{
-            search_re[i]=false ;
-        }
-    }       
-    return search_re;
+    sstr[strlen(sstr)-1] ='\000';
+    taglist * list = malloc(10*sizeof(taglist));
+    char * temp0 = sstr,*temp1;
+    char temp[30];
+    list->no =0;
+    if(search_choice == SEARCH_CONTENT){
+        strncpy(temp,sstr,30*sizeof(char));
+        list->list[list->no] =malloc(30*sizeof(char));
+        strcpy(list->list[list->no],temp);
+        list->no++;
+    }
+    do{
+        strtok_r(temp0," ",&temp1);
+        list->list[list->no] = temp0;
+        list->no++;
+        //printf("%s%s\n",temp0,temp1);
+        temp0=temp1;
+    }while(*temp1 !=0);
+    
+    return list;
 }
+int *search_content(e_news *news,size_t enews_no){
+    int * search_re = malloc(enews_no*sizeof(int));
+    memset(search_re,0,enews_no*sizeof(int));
+
+    taglist *list = str_sep(SEARCH_CONTENT);
+    for(int i =0;i< list->no;i++){
+        printf("%s\n",list->list[i]);
+    }
+    int list_no = list->no;
+    regex_t reg;
+    for(int j=0;j<list_no;j++) {
+        regmatch_t matches[30];
+        char * temp = list->list[j];
+        if(strlen(temp) >=2){
+            int status = regcomp(&reg,temp,REG_ICASE);
+            if(status) exit(-1);
+            //char *a = news->full_content;
+            for(int i = 0;i<enews_no;i++){
+                status = regexec(&reg,news[i].full_content,30,matches,0);
+                if(status == 0 ){
+                    search_re[i] += 1 ;
+                }
+            }  
+        }
+    }
+    return search_re;
+}   
 
 int *search_tag(e_news *news,size_t enews_no){
     int * search_re = malloc(enews_no*sizeof(int));
-    char *sstr;
-    size_t len =0;
-    printf("input search string :");
-    getline(&sstr,&len,stdin);
-    sstr[strlen(sstr)-1] = 0;
-    const char del[2] = " ";
-    char * token[100];
-    int i=0;
-    token[i] = strtok(sstr,del);
-    while(token[i] != NULL){
-        printf("%s\n",token[i]);
-        i++;
-        token[i] = strtok(NULL,del);
-    }
     return search_re;
 }
 
@@ -239,6 +257,8 @@ void recommendation(){
     int e0 = 0;//e0 is the current enews 
     float * sim = check_similarity(enews_list,list,enews_no,e0);
     //content search return a list with enews_no elements whose values are true or false
-    //int * search_re = search_content(enews_list,enews_no);
-    search_tag(enews_list,enews_no);
+    int * search_cont = search_content(enews_list,enews_no);
+    //search_tag(enews_list,enews_no);
+    
 }
+    
