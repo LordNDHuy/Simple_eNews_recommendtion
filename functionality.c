@@ -180,7 +180,7 @@ taglist * str_sep(int search_choice){
         //printf("%s%s\n",temp0,temp1);
         temp0=temp1;
     }while(*temp1 !=0);
-    
+
     return list;
 }
 
@@ -252,9 +252,11 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
         list_re->list[i] = enews_list[check[i]];
     }
     //printf debug
-    //print_debug(list_re,check,max_re);
+    print_debug(list_re,check,max_re);
     //free(check);
     free(sim);
+    free(check0);
+    free(check1);
     list_re->no = max_re;
     return list_re;
 }   
@@ -324,6 +326,34 @@ enews_return *search_content(e_news *news,size_t enews_no){
 
 int *search_tag(e_news *news,size_t enews_no){
     int * search_re = malloc(enews_no*sizeof(int));
+    int *check = malloc((enews_no)*sizeof(int));
+    for(int i = 0;i<enews_no;i++){
+        search_re[i]=0;
+        check[i]=0;
+    }
+
+    taglist *list = str_sep(SEARCH_TAG);
+    for(int i = 0;i<list->no;i++){
+        //printf("%s \n",list->list[i]);
+    }
+    for(int k = 0;k<list->no;k++){
+        for(int i = 0;i<enews_no;i++){
+            for(int j = 0;j<news[i].no;j++){
+                if(compare_string(list->list[k],news[i].tag_list[j]) == true){
+                    search_re[i]++;
+                    //printf("%s\n",news[i].tag_list[j]);
+                    break;
+                }
+            }
+        }
+    }
+    for(int i = 0; i< enews_no;i++){
+        check[i] = i;
+    }
+    fsort(search_re,check,enews_no);
+    for(int i =0;i<enews_no;i++){
+        printf("%i %i\n",check[i],search_re[i]);
+    }
     return search_re;
 }
 void free_func(){
@@ -336,13 +366,13 @@ void recommendation(){
 
     //search for enews'tag similarity
     int e0 = 4;//e0 is the current enews 
-    printf("this is enews similarity search\n");
-    enews_return * sim = check_similarity(enews_list,list,enews_no,e0);
+        //printf("this is enews similarity search\n");
+        //enews_return * similar = check_similarity(enews_list,list,enews_no,e0);
     
-    printf("\n this is string content search\n");
+        //printf("\n this is string content search\n");
     //content search return a list with enews_no elements whose values are true or false
-    enews_return * search_cont = search_content(enews_list,enews_no);
-    //search_tag(enews_list,enews_no);
+        //enews_return * search_cont = search_content(enews_list,enews_no);
+    search_tag(enews_list,enews_no);
 
 
 }
