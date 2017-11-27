@@ -158,11 +158,12 @@ void fsort(float * arr,int * check,int enews_no){
 }
 //string separating function
 taglist * str_sep(int search_choice){
-    char *sstr;
     size_t len =0;
+    char *sstr;
     printf("input search string :");
     getline(&sstr,&len,stdin);
     sstr[strlen(sstr)-1] ='\000';
+    int i =0;
     taglist * list = malloc(10*sizeof(taglist));
     char * temp0 = sstr,*temp1;
     char temp[30];
@@ -179,8 +180,7 @@ taglist * str_sep(int search_choice){
         list->no++;
         //printf("%s%s\n",temp0,temp1);
         temp0=temp1;
-    }while(*temp1 !='\0');
-
+    }while(*temp1 !=0);
     return list;
 }
 
@@ -196,15 +196,16 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
     int *check0,*check1;
     float *sim = malloc((enews_no-1)*sizeof(float));
     int *check = malloc((enews_no-1)*sizeof(int));
-    memset(sim,-1,(enews_no-1)*sizeof(float));
-    memset(check,0,(enews_no-1)*sizeof(int));
-    //memset(sim,0.0f,enews_no*sizeof(float));
+    for(int i = 0;i<enews_no-1;i++){
+        sim[i] = -1;
+        check[0] =0;
+    }
 
     check0 = malloc(list->no*sizeof(int));
     check1 = malloc(list->no*sizeof(int));
-
-    memset(check0,false,list->no*sizeof(int));
-    // check matching of enews 0
+    for(int i=0;i<list->no;i++){
+        check0[i]=false;
+    } // check matching of enews 0
 
     for(int k = 0;k<list->no;k++){
         for(int i = 0;i<enews_list[e0].no;i++){
@@ -218,9 +219,11 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
         int c = 0;
     for(int j = 0;j< enews_no;j++){
         if(j != e0){
-            memset(check1,false,list->no*sizeof(int));
-            //check matching of enews i
-            for(int k = 0;k<list->no;k++){
+        for(int i=0;i<list->no;i++){
+            check1[i]=false;
+        }  
+                  //check matching of enews i
+        for(int k = 0;k<list->no;k++){
                 for(int i = 0;i<enews_list[j].no;i++){
                     if(compare_string(list->list[k],enews_list[j].tag_list[i])){
                         check1[k]=1;
@@ -253,79 +256,15 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
     }
     //printf debug
     //print_debug(list_re,check,max_re);
-    //free(check);
+    free(check);
     free(sim);
-    free(check0);
-    free(check1);
     list_re->no = max_re;
     return list_re;
 }   
 
-//search content
-
-
-enews_return *search_content(e_news *news,size_t enews_no){
-    float * search_re = malloc(enews_no*sizeof(float));
-    int *check = malloc((enews_no-1)*sizeof(int));
-    memset(search_re,0,(enews_no)*sizeof(float));
-    memset(check,0,(enews_no)*sizeof(int));
-
-    taglist *list = str_sep(SEARCH_CONTENT);
-    int list_no = list->no;
-    regex_t reg;
-    for(int j=0;j<list_no;j++) {
-        regmatch_t matches[30];
-        char * temp = list->list[j];
-        if(strlen(temp) >=2){
-            int status = regcomp(&reg,temp,REG_ICASE);
-            if(status) exit(-1);
-            //char *a = news->full_content;
-            for(int i = 0;i<enews_no;i++){
-                status = regexec(&reg,news[i].full_content,30,matches,0);
-                if(status == 0 ){
-                    search_re[i] += 1 ;
-                    
-                }
-            }  
-        }
-    }
-    //sort then divide to get the matching percentage
-    
-    for(int i=0;i<enews_no;i++){
-        check[i] = i;
-        search_re[i] = search_re[i] / list_no;
-    }
-    fsort(search_re,check,enews_no);
-    int max_re=0;
-
-    for(int i = 0;i< enews_no;i++){
-        search_re[i] >= PERCENTAGE ? max_re++:false;
-    }
-
-    printf("this is the number of enews match tag search %i\n",max_re);
-    //printf debug
-    
-
-    //declare enews return list 
-    enews_return * list_re = malloc(sizeof(enews_return));
-    list_re->list = malloc(max_re*sizeof(e_news));
-
-    for(int i= 0; i< max_re;i++){
-        list_re->list[i] = news[check[i]];
-    }
-    list_re->no = max_re;
-
-    //printf debug
-    for(int i = 0; i< enews_no;i++){
-        printf("%i : %f\n",check[i],search_re[i]);
-    }
-    //print_debug(list_re,check,max_re);
-    
-    return list_re;
-}   
-
+//search tag
 enews_return *search_tag(e_news *news,size_t enews_no){
-    int * search_re = malloc(enews_no*sizeof(int));
+    float * search_re = malloc(enews_no*sizeof(float));
     int *check = malloc((enews_no)*sizeof(int));
     for(int i = 0;i<enews_no;i++){
         search_re[i]=0;
@@ -349,10 +288,11 @@ enews_return *search_tag(e_news *news,size_t enews_no){
     }
     for(int i = 0; i< enews_no;i++){
         check[i] = i;
+        search_re[i] = search_re[i] / list->no;
     }
     fsort(search_re,check,enews_no);
     for(int i =0;i<enews_no;i++){
-        printf("%i %i\n",check[i],search_re[i]);
+        printf("in enews %i has %0.5f percent match\n",check[i],search_re[i]);
     }
     int max_re = 0;
     for(int i = 0;i<enews_no;i++){
@@ -367,10 +307,57 @@ enews_return *search_tag(e_news *news,size_t enews_no){
     return list_re;
 }
 
+
+//search content
+enews_return * search_content(e_news * news,int enews_no){
+    taglist * list = str_sep(SEARCH_CONTENT);
+    float * search_re = malloc(enews_no*sizeof(float));
+    int *check = malloc((enews_no)*sizeof(int));
+    for(int i = 0;i<enews_no;i++){
+        search_re[i]=0;
+        check[i]=0;
+    }
+    for(int j =0;j<enews_no;j++){
+        for(int i =0;i<list->no;i++){
+            e_news temp_news = news[j];
+            int k =0;
+            while(temp_news.full_content[k]){
+                if(temp_news.full_content[k] >= 65 && temp_news.full_content[k] <=90){
+                    temp_news.full_content[k] +=32;
+                }
+                k++;
+            }
+            char * temp =strstr(temp_news.full_content,list->list[i]);
+                if( temp!= NULL){
+                    search_re[j]++;
+                }
+        }
+    }
+    int list_no = list->no;
+    for(int i=0;i<enews_no;i++){
+        check[i] = i;
+        search_re[i] = search_re[i] / list_no;
+    }
+    fsort(search_re,check,enews_no);
+    int max_re=0;
+    for(int i =0;i<enews_no;i++){
+        search_re[i] > PERCENTAGE ? max_re++:false;
+    }
+    enews_return *list_re = malloc(sizeof(enews_return));
+    list_re->list= malloc(max_re*sizeof(e_news));
+    for(int i =0;i<max_re;i++){
+        list_re->list[i] = news[check[i]];
+    }
+    //print_debug(list_re,check,max_re);
+    for(int i =0;i<enews_no;i++){
+        printf("in enews %i has  %0.5f percent match\n",check[i],search_re[i]);
+    }
+    return list_re;
+}
 void recommendation(){
     e_news *enews_list =malloc(100*sizeof(e_news));
     taglist *list =malloc(100*sizeof(taglist));
-    int enews_no =0;//= data_management(enews_list,list);
+    int enews_no = data_management(enews_list,list);
     if(enews_no != 0){
         //search for enews'tag similarity
         int e0 = 4;//e0 is the current enews 

@@ -35,7 +35,7 @@ enum some_value {tag_no = 1000, enews_no =1000};
 typedef struct _e_news {
     char ID[10];              // ten-digit string
     char pubDate[10];         // partern: dd/mm/yyyy
-    char full_content[10000];
+    char full_content[100000];
     enum Category category;
     word *tag_list[100];
     int no;
