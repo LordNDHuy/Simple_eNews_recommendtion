@@ -3,7 +3,7 @@ CC   = gcc
 Cflag =  -Wall -std=c11 -g -c 
 
 Lflag =  -Wall -std=c11 -g 
-Lm = -lm -lc -lgcc
+Lm = -lm -lc -lgcc 
 
 .PHONY: clean
 
