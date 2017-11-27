@@ -1,5 +1,8 @@
 #include "functionality.h"
 #include <math.h>
+
+enum search_choice {SEARCH_CONTENT =0, SEARCH_TAG };
+
 //void load_files(e_news *list);
 int compare_string(char a[], char b[]){
     int i =0;
@@ -105,7 +108,8 @@ int data_management(e_news* enews_list,taglist*list){
                     break;
                 }
             }
-            if(check == false){
+            if(check == false){enum search_choice {SEARCH_CONTENT =0, SEARCH_TAG };
+
                 list->list[list->no] = enews_list[i].tag_list[j];
                 //printf("%s \n", list->list[list->no]);
                 list->no++;
@@ -117,8 +121,8 @@ int data_management(e_news* enews_list,taglist*list){
 
 //check similarity
 
-// sub func for check simi
-
+//some subfunctions
+    //calculate the similarity 
 float cal_similarity(int*a,int*b,int dim){
     float len_a = 0 ,len_b = 0;
     int sum=0;    
@@ -131,65 +135,25 @@ float cal_similarity(int*a,int*b,int dim){
     len_b = sqrtf(len_b);
     return sum/(len_a*len_b);
 }
+//sort int
+int fcomp(float a,float b){
+    float diff = a-b;
 
-float *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0){
-    int *check0,*check1;
-    float *sim = malloc(enews_no*sizeof(float));
-    check0 = malloc(list->no*sizeof(int));
-    check1 = malloc(list->no*sizeof(int));
-
-    memset(check0,false,list->no*sizeof(int));
-    // check matching of enews 0
-
-    for(int k = 0;k<list->no;k++){
-        for(int i = 0;i<enews_list[e0].no;i++){
-            if(compare_string(list->list[k],enews_list[e0].tag_list[i])){
-                check0[k]=true;
-                //printf("%s        ",enews_list[0]->tag_list[i]);
-            }
-        }
-    }
-
-
-        //check matching of (enews_no -1) E_news.
-    for(int j = 0;j< enews_no;j++){
-        if(j != e0){
-            memset(check1,false,list->no*sizeof(int));
-            //check matching of enews i
-            for(int k = 0;k<list->no;k++){
-                for(int i = 0;i<enews_list[j].no;i++){
-                    if(compare_string(list->list[k],enews_list[j].tag_list[i])){
-                        check1[k]=1;
-                        //printf("%s        ",enews_list[0]->tag_list[i]);
-                    }
-                }
-            }
-            ///
-            sim[j] = cal_similarity(check0,check1,list->no);
-            //printf("%.4f\n",sim);
-        }
-    }   
+}
+void fsort(float * arr,int enews_no){
     int i =1;
-    while(i<enews_no){
-        int j =i;
-        while(j>0 & sim[j-1]>sim[j]){
-            float temp=sim[j];
-            sim[j] = sim[j-1];
-            sim[j-1] = sim[j];
+    while(i < enews_no){
+        int j = i;
+        while(j>0 & arr[j-1]<=arr[j]){
+            float temp = arr[j];
+            arr[j] = arr[j-1];
+            arr[j-1] = temp;
             j--;
         }
         i++;
     }
-    for(int i=0;i<enews_no;i++){
-        if(i !=e0)
-        printf("enews %i to %i  %0.5f\n",i,e0,sim[i]);            
-        //printf("%-30s:  %-5i:%i\n",list->list[i],check0[i],check1[i]);
-    }
-    return sim;
-}   
-
-//search content
-enum search_choice {SEARCH_CONTENT =0, SEARCH_TAG };
+}
+//string separating function
 taglist * str_sep(int search_choice){
     char *sstr;
     size_t len =0;
@@ -216,14 +180,65 @@ taglist * str_sep(int search_choice){
     
     return list;
 }
+
+
+//
+float *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0){
+    int *check0,*check1;
+    float *sim = malloc(enews_no*sizeof(float));
+    //memset(sim,0.0f,enews_no*sizeof(float));
+
+    check0 = malloc(list->no*sizeof(int));
+    check1 = malloc(list->no*sizeof(int));
+
+    memset(check0,false,list->no*sizeof(int));
+    // check matching of enews 0
+
+    for(int k = 0;k<list->no;k++){
+        for(int i = 0;i<enews_list[e0].no;i++){
+            if(compare_string(list->list[k],enews_list[e0].tag_list[i])){
+                check0[k]=true;
+                //printf("%s        ",enews_list[0]->tag_list[i]);
+            }
+        }
+    }
+        //check matching of (enews_no -1) E_news.
+    for(int j = 0;j< enews_no;j++){
+        if(j != e0){
+            memset(check1,false,list->no*sizeof(int));
+            //check matching of enews i
+            for(int k = 0;k<list->no;k++){
+                for(int i = 0;i<enews_list[j].no;i++){
+                    if(compare_string(list->list[k],enews_list[j].tag_list[i])){
+                        check1[k]=1;
+                        //printf("%s        ",enews_list[0]->tag_list[i]);
+                    }
+                }
+            }
+            ///
+            sim[j] = cal_similarity(check0,check1,list->no);
+            //printf("%.4f\n",sim);
+        }
+    }   
+    // sort
+    fsort(sim,enews_no);
+    
+    for(int i=0;i<enews_no;i++){
+        if(i !=e0)
+        printf("enews %i to %i  %0.5f\n",i,e0,sim[i]);            
+        //printf("%-30s:  %-5i:%i\n",list->list[i],check0[i],check1[i]);
+    }
+    return sim;
+}   
+
+//search content
+
+
 int *search_content(e_news *news,size_t enews_no){
-    int * search_re = malloc(enews_no*sizeof(int));
+    float * search_re = malloc(enews_no*sizeof(int));
     memset(search_re,0,enews_no*sizeof(int));
 
     taglist *list = str_sep(SEARCH_CONTENT);
-    for(int i =0;i< list->no;i++){
-        printf("%s\n",list->list[i]);
-    }
     int list_no = list->no;
     regex_t reg;
     for(int j=0;j<list_no;j++) {
@@ -241,6 +256,20 @@ int *search_content(e_news *news,size_t enews_no){
             }  
         }
     }
+
+    //sort then divide to get the matching percentage
+    
+    fsort(search_re,enews_no);
+    for(int i=0;i<enews_no;i++){
+        search_re[i] = search_re[i] / list_no;
+    }
+    int max_re=0;
+    for(int i = 0;i< enews_no;i++){
+        search_re[i] >= PERCENTAGE ? max_re++:false;
+    }
+    for(int i = 0; i< enews_no;i++){
+        printf("%f\n",search_re[i]);
+    }
     return search_re;
 }   
 
@@ -248,7 +277,9 @@ int *search_tag(e_news *news,size_t enews_no){
     int * search_re = malloc(enews_no*sizeof(int));
     return search_re;
 }
-
+void free_func(){
+    
+}
 void recommendation(){
     e_news *enews_list =malloc(100*sizeof(e_news));
     taglist *list =malloc(100*sizeof(taglist));
@@ -259,6 +290,7 @@ void recommendation(){
     //content search return a list with enews_no elements whose values are true or false
     int * search_cont = search_content(enews_list,enews_no);
     //search_tag(enews_list,enews_no);
-    
+
+
 }
     
