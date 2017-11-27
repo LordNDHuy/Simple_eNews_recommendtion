@@ -39,7 +39,7 @@ struct _e_news struct_dissolve(char *input){
 	unsigned short taglistWord_position = 0;
 	size_t taglist = 0;
 
-
+	temp.no = 0;
 	for (size_t position = 0; input[position] != '\0'; position++){
 		if (input[position] == ' ') {space++; continue;}
 
@@ -65,6 +65,7 @@ struct _e_news struct_dissolve(char *input){
 			if (input[position] == ';') {
 				taglistWord_position = 0;
 				taglist++;
+				temp.no++;
 				continue; }
 			(*temp.tag_list[taglist])[taglistWord_position] = input[position];
 			taglistWord_position++; break;}
@@ -77,8 +78,7 @@ void FileReader_E_news(){
 	char * line = NULL;
 	size_t len = 0;
 	size_t position = 0;
-	char * dir = "./e_news.txt";
-	file = fopen(dir, "r");
+    file = fopen("./resources/e_news.txt","r");  
 	if (file == NULL) {
 		printf("File could not be found! ");
 		exit(-1);
@@ -218,10 +218,10 @@ void interface(){
 	//constructor
 	FileReader_E_news();
 	FileReader_queries();
-
+	recommendation();
 	return;
-	ClearScreen();
-	header();
-	keyboardInput_E_news();
+	//ClearScreen();
+	//header();
+	//keyboardInput_E_news();
 
 }

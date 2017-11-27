@@ -59,7 +59,7 @@ int scan_dir(e_news *elist){
             elist[length] = get_news(dir[dir_le]);
             length++;
             //printf("%s",dir[dir_le]);
-            //printf("%i", enews_no[*e_num]);
+            //printf("%i", e_news_num[*e_num]);
         }
 
         if(compare_string(dir[dir_le] ,"..") == true) break;
@@ -72,34 +72,9 @@ int scan_dir(e_news *elist){
 
 // enews and V management
 
-int data_management(e_news* enews_list,taglist*list){    
-    size_t enews_no = scan_dir(enews_list);
-
-    /// simlation of news content
-    char a[10000] = "The first of our three brains to evolve is what scientists call the reptilian cortex. This brain sustains the elementary activities of animal survival such as respiration, adequate rest and a beating heart. We are not required to consciously “think” about these activities.The reptilian cortex also houses the “startle centre”, a mechanism that facilitates swift reactions to unexpected occurrences in our surroundings. That panicked lurch you experience when a door slams shut somewhere in the house, or the heightened awareness you feel when a twig cracks in a nearby bush while out on an evening stroll are both examples of the reptilian cortex at work. When it comes to our interaction with others, the reptilian brain offers up only the most basic impulses: aggression, mating, and territorial defence. There is no great difference, in this sense, between a crocodile defending its spot along the river and a turf war between two urban gangs.";
-    memcpy(enews_list[0].full_content,a,strlen(a)-1);
-    char b[10000] = "Although the lizard may stake a claim to its habitat, it exerts total indifference toward the well-being of its young. Listen to the anguished squeal of a dolphin separated from its pod or witness the sight of elephants mourning their dead, however, and it is clear that a new development is at play. Scientists have identified this as the limbic cortex. Unique to mammals, the limbic cortex impels creatures to nurture their offspring by delivering feelings of tenderness and warmth to the parent when children are nearby. These same sensations also cause mammals to develop various types of social relations and kinship networks. When we are with others of “our kind” – be it at soccer practice, church, school or a nightclub – we experience positive sensations of togetherness, solidarity and comfort. If we spend too long away from these networks, then loneliness sets in and encourages us to seek companionship";
-    memcpy(enews_list[1].full_content,b,strlen(b)-1);
-    char c[10000] = "Only human capabilities extend far beyond the scope of these two cortexes. Humans eat, sleep and play, but we also speak, plot, rationalise and debate finer points of morality. Our unique abilities are the result of an expansive third brain – the neocortex – which engages with logic, reason and ideas. The power of the neocortex comes from its ability to think beyond the present, concrete moment. While other mammals are mainly restricted to impulsive actions (although some, such as apes, can learn and remember simple lessons), humans can think about the “big picture”. We can string together simple lessons (for example, an apple drops downwards from a tree; hurting others causes unhappiness) to develop complex theories of physical or social phenomena (such as the laws of gravity and a concern for human rights).";
-    memcpy(enews_list[2].full_content,c,strlen(c)-1);
-    char d[10000] = "The neocortex is also responsible for the process by which we decide on and commit to particular courses of action. Strung together over time, these choices can accumulate into feats of progress unknown to other animals. Anticipating a better grade on the following morning’s exam, a student can ignore the limbic urge to socialise and go to sleep early instead. Over three years, this ongoing sacrifice translates into a first class degree and a scholarship to graduate school; over a lifetime, it can mean groundbreaking contributions to human knowledge and development. The ability to sacrifice our drive for immediate satisfaction in order to benefit later is a product of the neocortex. ";
-    memcpy(enews_list[3].full_content,d,strlen(d)-1);
-    char e[10000] = "Understanding the triune brain can help us appreciate the different natures of brain damage and psychological disorders. The most devastating form of brain damage, for example, is a condition in which someone is understood to be brain dead. In this state a person appears merely unconscious – sleeping, perhaps – but this is illusory. Here, the reptilian brain is functioning on autopilot despite the permanent loss of other cortexes. ";
-    memcpy(enews_list[4].full_content,e,strlen(e)-1);
-    char f[10000] = "Disturbances to the limbic cortex are registered in a different manner. Pups with limbic damage can move around and feed themselves well enough but do not register the presence of their littermates. Scientists have observed how, after a limbic lobotomy2, “one impaired monkey stepped on his outraged peers as if treading on a log or a rock”. In our own species, limbic damage is closely related to sociopathic behaviour. Sociopaths in possession of fully-functioning neocortexes are often shrewd and emotionally intelligent people but lack any ability to relate to, empathise with or express concern for others. ";
-    memcpy(enews_list[5].full_content,f,strlen(f)-1);
-    char g[10000] = "One of the neurological wonders of history occurred when a railway worker named Phineas Gage survived an incident during which a metal rod skewered his skull, taking a considerable amount of his neocortex with it. Though Gage continued to live and work as before, his fellow employees observed a shift in the equilibrium of his personality. Gage’s animal propensities were now sharply pronounced while his intellectual abilities suffered; garrulous or obscene jokes replaced his once quick wit. New findings suggest, however, that Gage managed to soften these abrupt changes over time and rediscover an appropriate social manner. This would indicate that reparative therapy has the potential to help patients with advanced brain trauma to gain an improved quality of life. ";
-    memcpy(enews_list[6].full_content,g,strlen(g)-1);
-
-    //end simulation.
+void data_management(e_news* enews_list,taglist*list,int e_news_num){    
     int check = false; 
-    for(int j=0;j<enews_no;j++){
-        for(int i =0;i<enews_list[j].no;i++){
-            //printf("%s \n",enews_list[j].tag_list[i]);
-        }
-    }
-    
-    for(int i = 0;i < enews_no;i++){
+    for(int i = 0;i < e_news_num;i++){
         for(int j =0; j < enews_list[i].no;j++){
             list->list[list->no] = "\0";
             for(int k = 0; k < list->no;k++){
@@ -108,15 +83,13 @@ int data_management(e_news* enews_list,taglist*list){
                     break;
                 }
             }
-            if(check == false){enum search_choice {SEARCH_CONTENT =0, SEARCH_TAG };
-
+            if(check == true){
                 list->list[list->no] = enews_list[i].tag_list[j];
                 //printf("%s \n", list->list[list->no]);
                 list->no++;
             }else check = false;
         }
     }
-    return enews_no;
 }
 
 //check similarity
@@ -140,9 +113,9 @@ int fcomp(float a,float b){
     float diff = a-b;
 
 }
-void fsort(float * arr,int * check,int enews_no){
+void fsort(float * arr,int * check,int e_news_num){
     int i =1;
-    while(i < enews_no){
+    while(i < e_news_num){
         int j = i;
         while(j>0 & arr[j-1]<=arr[j]){
             float temp = arr[j];
@@ -192,11 +165,11 @@ void print_debug(enews_return*list_re,int *check,int max_re){
     }
 }
 //
-enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,int e0){
+enews_return *check_similarity(taglist *list,int e0){
     int *check0,*check1;
-    float *sim = malloc((enews_no-1)*sizeof(float));
-    int *check = malloc((enews_no-1)*sizeof(int));
-    for(int i = 0;i<enews_no-1;i++){
+    float *sim = malloc((e_news_num-1)*sizeof(float));
+    int *check = malloc((e_news_num-1)*sizeof(int));
+    for(int i = 0;i<e_news_num-1;i++){
         sim[i] = -1;
         check[0] =0;
     }
@@ -208,26 +181,27 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
     } // check matching of enews 0
 
     for(int k = 0;k<list->no;k++){
-        for(int i = 0;i<enews_list[e0].no;i++){
-            if(compare_string(list->list[k],enews_list[e0].tag_list[i])){
+        for(int i = 0;i<E_news_arr[e0].no;i++){
+            if(compare_string(list->list[k],E_news_arr[e0].tag_list[i])){
                 check0[k]=true;
-                //printf("%s        ",enews_list[0]->tag_list[i]);
+                //printf("%s        ",E_news_arr[0]->tag_list[i]);
             }
         }
     }
-        //check matching of (enews_no -1) E_news.
+        //check matching of (e_news_num -1) E_news.
+    //print_debug(list_re,check,max_re);
         int c = 0;
-    for(int j = 0;j< enews_no;j++){
+    for(int j = 0;j< e_news_num;j++){
         if(j != e0){
         for(int i=0;i<list->no;i++){
             check1[i]=false;
         }  
                   //check matching of enews i
         for(int k = 0;k<list->no;k++){
-                for(int i = 0;i<enews_list[j].no;i++){
-                    if(compare_string(list->list[k],enews_list[j].tag_list[i])){
+                for(int i = 0;i<E_news_arr[j].no;i++){
+                    if(compare_string(list->list[k],E_news_arr[j].tag_list[i])){
                         check1[k]=1;
-                        //printf("%s        ",enews_list[0]->tag_list[i]);
+                        //printf("%s        ",E_news_arr[0]->tag_list[i]);
                     }
                 }
             }
@@ -236,37 +210,40 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
             check[c] = j;
             c++;
             //printf("%.4f\n",sim);
-        }
+        } 
     }   
+    check[e_news_num-1] = e0;
     // sort
-    fsort(sim,check,enews_no);
+    fsort(sim,check,e_news_num);
     int max_re = 0;
-    for(int i=0;i<enews_no;i++){
+    for(int i=0;i<e_news_num;i++){
         //printf debug
-        if(check[i] != e0)
-        printf("enews %i to %i  %0.5f\n",check[i],e0,sim[i]);            
-        //printf("%-30s:  %-5i:%i\n",list->list[i],check0[i],check1[i]);
-        sim[i]>PERCENTAGE?max_re++:false;
+        if(check[i]!=e0){
+            printf("enews %i to %i  %0.5f\n",check[i],e0,sim[i]);            
+            //printf("%-30s:  %-5i:%i\n",list->list[i],check0[i],check1[i]);
+            if(sim[i]>PERCENTAGE) max_re++;
+        }
     }
-    printf("the number of enews match more thanf %.3f %:%i\n",PERCENTAGE,max_re);
-    enews_return * list_re = malloc(sizeof(enews_return));;
-    list_re->list = malloc(max_re*sizeof(e_news));
-    for(int i = 0;i< max_re;i++){
-        list_re->list[i] = enews_list[check[i]];
+    printf("the number of enews match more thanf %0.3f %:%i\n",PERCENTAGE,max_re);
+    enews_return *list_re = malloc(sizeof(enews_return));
+    list_re->list= malloc(max_re*sizeof(e_news));
+    list_re->no = max_re;
+
+    for(int i =0;i<max_re;i++){
+        list_re->list[i] = E_news_arr[check[i]];
     }
+
     //printf debug
     //print_debug(list_re,check,max_re);
-    free(check);
-    free(sim);
-    list_re->no = max_re;
+    
     return list_re;
 }   
 
 //search tag
-enews_return *search_tag(e_news *news,size_t enews_no){
-    float * search_re = malloc(enews_no*sizeof(float));
-    int *check = malloc((enews_no)*sizeof(int));
-    for(int i = 0;i<enews_no;i++){
+enews_return *search_tag(){
+    float * search_re = malloc(e_news_num*sizeof(float));
+    int *check = malloc((e_news_num)*sizeof(int));
+    for(int i = 0;i<e_news_num;i++){
         search_re[i]=0;
         check[i]=0;
     }
@@ -276,9 +253,9 @@ enews_return *search_tag(e_news *news,size_t enews_no){
         //printf("%s \n",list->list[i]);
     }
     for(int k = 0;k<list->no;k++){
-        for(int i = 0;i<enews_no;i++){
-            for(int j = 0;j<news[i].no;j++){
-                if(compare_string(list->list[k],news[i].tag_list[j]) == true){
+        for(int i = 0;i<e_news_num;i++){
+            for(int j = 0;j<E_news_arr[i].no;j++){
+                if(compare_string(list->list[k],E_news_arr[i].tag_list[j]) == true){
                     search_re[i]++;
                     //printf("%s\n",news[i].tag_list[j]);
                     break;
@@ -286,22 +263,23 @@ enews_return *search_tag(e_news *news,size_t enews_no){
             }
         }
     }
-    for(int i = 0; i< enews_no;i++){
+    for(int i = 0; i< e_news_num;i++){
         check[i] = i;
         search_re[i] = search_re[i] / list->no;
     }
-    fsort(search_re,check,enews_no);
-    for(int i =0;i<enews_no;i++){
+    fsort(search_re,check,e_news_num);
+    for(int i =0;i<e_news_num;i++){
         printf("in enews %i has %0.5f percent match\n",check[i],search_re[i]);
     }
     int max_re = 0;
-    for(int i = 0;i<enews_no;i++){
+    for(int i = 0;i<e_news_num;i++){
         if(search_re[i]>0) max_re++;
     }
     enews_return * list_re = malloc(sizeof(enews_return));
     list_re->list = malloc(max_re*sizeof(e_news));
+    list_re->no = max_re;
     for(int i = 0;i<max_re;i++){
-        list_re->list[i] = news[check[i]];
+        list_re->list[i] = E_news_arr[check[i]];
     }
     //print_debug(list_re,check,max_re);
     return list_re;
@@ -309,17 +287,17 @@ enews_return *search_tag(e_news *news,size_t enews_no){
 
 
 //search content
-enews_return * search_content(e_news * news,int enews_no){
+enews_return * search_content(){
     taglist * list = str_sep(SEARCH_CONTENT);
-    float * search_re = malloc(enews_no*sizeof(float));
-    int *check = malloc((enews_no)*sizeof(int));
-    for(int i = 0;i<enews_no;i++){
+    float * search_re = malloc(e_news_num*sizeof(float));
+    int *check = malloc((e_news_num)*sizeof(int));
+    for(int i = 0;i<e_news_num;i++){
         search_re[i]=0;
         check[i]=0;
     }
-    for(int j =0;j<enews_no;j++){
+    for(int j =0;j<e_news_num;j++){
         for(int i =0;i<list->no;i++){
-            e_news temp_news = news[j];
+            e_news temp_news = E_news_arr[j];
             int k =0;
             while(temp_news.full_content[k]){
                 if(temp_news.full_content[k] >= 65 && temp_news.full_content[k] <=90){
@@ -334,40 +312,65 @@ enews_return * search_content(e_news * news,int enews_no){
         }
     }
     int list_no = list->no;
-    for(int i=0;i<enews_no;i++){
+    for(int i=0;i<e_news_num;i++){
         check[i] = i;
         search_re[i] = search_re[i] / list_no;
     }
-    fsort(search_re,check,enews_no);
+    fsort(search_re,check,e_news_num);
     int max_re=0;
-    for(int i =0;i<enews_no;i++){
+    for(int i =0;i<e_news_num;i++){
         search_re[i] > PERCENTAGE ? max_re++:false;
     }
     enews_return *list_re = malloc(sizeof(enews_return));
     list_re->list= malloc(max_re*sizeof(e_news));
     for(int i =0;i<max_re;i++){
-        list_re->list[i] = news[check[i]];
+        list_re->list[i] = E_news_arr[check[i]];
     }
+    list_re->no = max_re;
     //print_debug(list_re,check,max_re);
-    for(int i =0;i<enews_no;i++){
+    for(int i =0;i<e_news_num;i++){
         printf("in enews %i has  %0.5f percent match\n",check[i],search_re[i]);
     }
     return list_re;
 }
-void recommendation(){
-    e_news *enews_list =malloc(100*sizeof(e_news));
+taglist* get_tag_list(){
     taglist *list =malloc(100*sizeof(taglist));
-    int enews_no = data_management(enews_list,list);
-    if(enews_no != 0){
-        //search for enews'tag similarity
-        int e0 = 4;//e0 is the current enews 
-        printf("this is enews similarity search\n");
-        enews_return * similar = check_similarity(enews_list,list,enews_no,e0);
-        printf("\n this is string content search\n");
-        //content search return a list with enews_no elements whose values are true or false
-        enews_return * search_cont = search_content(enews_list,enews_no);
-        printf("\n this is string tag search\n");
-        enews_return * searchtag = search_tag(enews_list,enews_no);
+    int check = false; 
+    list->no =0;
+    //print_debug(list_re,check,max_re);
+
+    for(int i = 0;i<e_news_num;i++){
+        for(int j = 0; j<E_news_arr[i].no;j++){
+            list->list[list->no] = " ";
+            for(int k = 0;k <list->no;k++){
+                if(compare_string(E_news_arr[i].tag_list[j],list->list[list->no]) == true){
+                    check =true;
+                    break;
+                } else check = false;
+            }
+            if(check ==false){
+                list->list[list->no] = E_news_arr[i].tag_list[j];
+                //printf("%s\n",list->list[list->no]);
+                list->no++;
+            }
+        }
+        
+    }
+
+    return list;
+}
+void recommendation(){
+    taglist *list =get_tag_list();
+    if(e_news_num != 0){
+        int e0 = 19;//e0 is the current enews 
+        printf("                    THIS IS THE SIMILAR RESULT\n\n");
+        enews_return * similar = check_similarity(list,e0);
+
+        printf("\n                  THIS IS CONTENT SEARCH\n\n");
+        enews_return * search_cont = search_content();
+
+        printf("\n                  THIS IS TAG SEARCH\n");
+        enews_return * searchtag = search_tag();
     } else printf("no news loaded XD");
 }
     

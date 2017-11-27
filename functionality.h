@@ -25,7 +25,7 @@
 
 #define true     1
 #define false    0
-#define PERCENTAGE 0.1
+#define PERCENTAGE 0.8
 typedef char word[30];
 
 enum Category {SOCIETY, EDUCATION, SCIENCE, TECHNOLOGY, 
@@ -43,7 +43,7 @@ typedef struct _e_news {
 } e_news;
 
 typedef struct _taglist{
-    word *list[100];
+    word *list[10000];
     int no;
 } taglist;
 
@@ -58,16 +58,6 @@ typedef struct _enews_return{
 
 extern e_news *E_news_arr; 			//store struct e_news read from file
 extern size_t e_news_num;					//store number of e-news
-
-////function section
-e_news get_news(char *);
-
-int scan_dir(e_news *);
-
-int data_management(e_news*,taglist*);
-//check similarity
-
-enews_return *check_similarity(e_news *, taglist *,size_t,int);
 
 void recommendation();
 
