@@ -179,7 +179,7 @@ taglist * str_sep(int search_choice){
         list->no++;
         //printf("%s%s\n",temp0,temp1);
         temp0=temp1;
-    }while(*temp1 !=0);
+    }while(*temp1 !='\0');
 
     return list;
 }
@@ -252,7 +252,7 @@ enews_return *check_similarity(e_news *enews_list,taglist *list,size_t enews_no,
         list_re->list[i] = enews_list[check[i]];
     }
     //printf debug
-    print_debug(list_re,check,max_re);
+    //print_debug(list_re,check,max_re);
     //free(check);
     free(sim);
     free(check0);
@@ -307,7 +307,7 @@ enews_return *search_content(e_news *news,size_t enews_no){
     
 
     //declare enews return list 
-    enews_return * list_re = malloc(max_re*sizeof(enews_return));
+    enews_return * list_re = malloc(sizeof(enews_return));
     list_re->list = malloc(max_re*sizeof(e_news));
 
     for(int i= 0; i< max_re;i++){
@@ -324,7 +324,7 @@ enews_return *search_content(e_news *news,size_t enews_no){
     return list_re;
 }   
 
-int *search_tag(e_news *news,size_t enews_no){
+enews_return *search_tag(e_news *news,size_t enews_no){
     int * search_re = malloc(enews_no*sizeof(int));
     int *check = malloc((enews_no)*sizeof(int));
     for(int i = 0;i<enews_no;i++){
@@ -354,26 +354,33 @@ int *search_tag(e_news *news,size_t enews_no){
     for(int i =0;i<enews_no;i++){
         printf("%i %i\n",check[i],search_re[i]);
     }
-    return search_re;
+    int max_re = 0;
+    for(int i = 0;i<enews_no;i++){
+        if(search_re[i]>0) max_re++;
+    }
+    enews_return * list_re = malloc(sizeof(enews_return));
+    list_re->list = malloc(max_re*sizeof(e_news));
+    for(int i = 0;i<max_re;i++){
+        list_re->list[i] = news[check[i]];
+    }
+    //print_debug(list_re,check,max_re);
+    return list_re;
 }
-void free_func(){
-    
-}
+
 void recommendation(){
     e_news *enews_list =malloc(100*sizeof(e_news));
     taglist *list =malloc(100*sizeof(taglist));
-    int enews_no = data_management(enews_list,list);
-
-    //search for enews'tag similarity
-    int e0 = 4;//e0 is the current enews 
-        //printf("this is enews similarity search\n");
-        //enews_return * similar = check_similarity(enews_list,list,enews_no,e0);
-    
-        //printf("\n this is string content search\n");
-    //content search return a list with enews_no elements whose values are true or false
-        //enews_return * search_cont = search_content(enews_list,enews_no);
-    search_tag(enews_list,enews_no);
-
-
+    int enews_no =0;//= data_management(enews_list,list);
+    if(enews_no != 0){
+        //search for enews'tag similarity
+        int e0 = 4;//e0 is the current enews 
+        printf("this is enews similarity search\n");
+        enews_return * similar = check_similarity(enews_list,list,enews_no,e0);
+        printf("\n this is string content search\n");
+        //content search return a list with enews_no elements whose values are true or false
+        enews_return * search_cont = search_content(enews_list,enews_no);
+        printf("\n this is string tag search\n");
+        enews_return * searchtag = search_tag(enews_list,enews_no);
+    } else printf("no news loaded XD");
 }
     
