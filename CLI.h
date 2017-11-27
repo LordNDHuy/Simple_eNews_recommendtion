@@ -9,12 +9,13 @@
 #define IO_CLI_H_
 
 
-#include "functionality.h"
+
 
 extern void header(void);
 
-// file manipulation
-extern void FileReader_E_news(void);
-extern void FileReader_query(void);
+//keyboard typing manipulation
+extern void keyboardInput_E_news(void);
+extern void keyboardInput_queries(void);
 
+extern void interface();
 #endif /* IO_CLI_H_ */

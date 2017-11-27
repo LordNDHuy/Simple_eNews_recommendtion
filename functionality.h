@@ -10,7 +10,7 @@
  *
  * Created on November 21, 2017, 1:33 PM
  */
-
+#include "CLI.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
